@@ -40,7 +40,7 @@ $app->get('/', function (Silex\Application $app, Request $request) use ($blogPos
     $yaml = new Parser();
 
     try {
-        $configurator = Yaml::Parse('../app/config.yml');
+        $configurator = Yaml::Parse( __DIR__ . '/../app/config.yml');
         echo "<pre>";
         var_dump($configurator);
         echo "</pre>";
