@@ -4,6 +4,7 @@ use Silex\Application;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
 
+
 $app = new Application();
 
 //Load global configuration
@@ -13,5 +14,8 @@ try {
 } catch (ParseException $e) {
     printf("Unable to parse the YAML string: %s", $e->getMessage());
 }
+
+//initiate DBAL service
+$DBAL = new \Core\Services\DBAL($configurator);
 
 return $app;
