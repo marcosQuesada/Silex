@@ -23,7 +23,7 @@ $blogPosts = array(
     ),
 );
 
-$app->get('/blog', function (Silex\Application $app, Request $request) use ($blogPosts) {
+$app->get('/', function (Silex\Application $app, Request $request) use ($blogPosts) {
     /*if (!isset($blogPosts[3])) {
         $app->abort(404, "Post 3 does not exist.");
     }*/
@@ -38,6 +38,7 @@ $app->get('/blog', function (Silex\Application $app, Request $request) use ($blo
         $output .= '<br />';
     }
 
+//    return $app->json(array('name' => array(1=>'x', 2=> 'y')));
     return new Response($output, 201);
 });
 
@@ -60,6 +61,11 @@ $app->post('/feedback', function (Request $request) {
 //    mail('feedback@yoursite.com', '[YourSite] Feedback', $message);
 
     return new Response('Thank you for your feedback!', 201);
+});
+
+//redirect
+$app->get('/test', function () use ($app) {
+    return $app->redirect('/');
 });
 
 $app->error(function (\Exception $e, $code) {
