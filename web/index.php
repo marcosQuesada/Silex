@@ -71,7 +71,7 @@ $app->error(function (\Exception $e, $code) {
             $message = 'We are sorry, but something went terribly wrong.';
     }
 
-    return new Response($message, 404);
+    return new Response($message, 404, array('X-header-test'=> 'ok'));
 });
 
 $app->run();
