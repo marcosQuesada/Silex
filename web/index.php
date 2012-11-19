@@ -23,6 +23,12 @@ $blogPosts = array(
     ),
 );
 
+function getRoutes($app)
+{
+    return $app['routes']->all();
+
+}
+    
 $app->get('/', function (Silex\Application $app, Request $request) use ($blogPosts) {
     /*if (!isset($blogPosts[3])) {
         $app->abort(404, "Post 3 does not exist.");
@@ -30,7 +36,7 @@ $app->get('/', function (Silex\Application $app, Request $request) use ($blogPos
 
     $message = $request->get('message');
 
-    foreach ($app['routes']->all() as $key=>$route) {
+    foreach (getRoutes($app) as $key=>$route) {
         echo "key:".$key."-".$route->getPattern()."<br><br>";
     }
     $output = '';
