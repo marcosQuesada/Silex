@@ -31,7 +31,7 @@ $app->get('/blog', function (Silex\Application $app, Request $request) use ($blo
     $message = $request->get('message');
 
     var_dump($message);
-    
+
     $output = '';
     foreach ($blogPosts as $post) {
         $output .= $post['title'];
@@ -60,6 +60,18 @@ $app->post('/feedback', function (Request $request) {
 //    mail('feedback@yoursite.com', '[YourSite] Feedback', $message);
 
     return new Response('Thank you for your feedback!', 201);
+});
+
+$app->error(function (\Exception $e, $code) {
+    switch ($code) {
+        case 404:
+            $message = 'OHHH! The requested page could not be found.';
+            break;
+        default:
+            $message = 'We are sorry, but something went terribly wrong.';
+    }
+
+    return new Response($message);
 });
 
 $app->run();
