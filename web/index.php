@@ -1,14 +1,14 @@
     <?php
 // web/index.php
+    error_reporting(E_ALL ^ E_NOTICE);
 
 require_once __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Yaml\Parser;
-use Symfony\Component\Yaml\Exception\ParseException;
-use Symfony\Component\Yaml\Yaml;
 
-$app = new Silex\Application();
+
+$app = require_once __DIR__.'/../src/Core/app.php';
+
 
 // definitions
 $blogPosts = array(
@@ -37,19 +37,10 @@ function getRoutes($app)
  **/
 $app->get('/', function (Silex\Application $app, Request $request) use ($blogPosts) {
 
-    $yaml = new Parser();
 
-    try {
-        $configurator = Yaml::Parse( __DIR__ . '/../app/config.yml');
-        echo "<pre>";
-        var_dump($configurator);
-        echo "</pre>";
-    } catch (ParseException $e) {
-        printf("Unable to parse the YAML string: %s", $e->getMessage());
-    }
-
-
-
+    echo "<pre>";
+        var_dump($app['config']);
+    echo "</pre>";
     /*if (!isset($blogPosts[3])) {
         $app->abort(404, "Post 3 does not exist.");
     }*/
