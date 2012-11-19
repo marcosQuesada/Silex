@@ -2,39 +2,56 @@
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
-
-require_once __DIR__.'/model.php';
+use Core\Model;
 
 /**
  *  /
  **/
-$app->get('/', function (Silex\Application $app, Request $request) use ($blogPosts) {
+$app->get('/', function (Silex\Application $app, Request $request){
 
-
+    $model = new Model($app);
     echo "<pre>";
-    var_dump($app['config']);
+    var_dump($model->getCategory(1));
     echo "</pre>";
+
+    $categories = $model->getAll('categorias');
+
     /*if (!isset($blogPosts[3])) {
         $app->abort(404, "Post 3 does not exist.");
     }*/
+
+    $output = '';
+    foreach ($categories as $post) {
+        $output .= $post['title_es'];
+        $output .= '<br />';
+    }
 
     $message = $request->get('message');
 
     foreach (getRoutes($app) as $key=>$route) {
         echo "key:".$key."-".$route->getPattern()."<br><br>";
     }
-    $output = '';
-    foreach ($blogPosts as $post) {
-        $output .= $post['title'];
-        $output .= '<br />';
-    }
-
 //    return $app->json(array('name' => array(1=>'x', 2=> 'y')));
     return new Response($output, 201);
 });
 
 
-
+////
+// definitions
+$blogPosts = array(
+    1 => array(
+        'date'      => '2011-03-29',
+        'author'    => 'igorw',
+        'title'     => 'Using Silex',
+        'body'      => '...',
+    ),
+    2 => array(
+        'date'      => '2011-03-29',
+        'author'    => 'igorw',
+        'title'     => 'Using Silex 2',
+        'body'      => '...',
+    ),
+);
 /**
  *  /blog/show/{id}
  *  parameter: id

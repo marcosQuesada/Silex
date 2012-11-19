@@ -3,7 +3,7 @@
 use Silex\Application;
 use Symfony\Component\Yaml\Exception\ParseException;
 use Symfony\Component\Yaml\Yaml;
-
+use Core\Services\DBAL;
 
 $app = new Application();
 
@@ -16,7 +16,7 @@ try {
 }
 
 //initiate DBAL service
-$DBAL = new \Core\Services\DBAL($configurator);
+$DBAL = new DBAL($configurator);
 $app['DBAL'] = $DBAL->getConnection();
 
 return $app;
