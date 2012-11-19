@@ -4,6 +4,9 @@
 require_once __DIR__.'/../vendor/autoload.php';
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\Yaml\Parser;
+use Symfony\Component\Yaml\Exception\ParseException;
+use Symfony\Component\Yaml\Yaml;
 
 $app = new Silex\Application();
 
@@ -28,8 +31,25 @@ function getRoutes($app)
     return $app['routes']->all();
 
 }
-    
+
+/**
+ *  /
+ **/
 $app->get('/', function (Silex\Application $app, Request $request) use ($blogPosts) {
+
+    $yaml = new Parser();
+
+    try {
+        $configurator = Yaml::Parse('../app/config.yml');
+        echo "<pre>";
+        var_dump($configurator);
+        echo "</pre>";
+    } catch (ParseException $e) {
+        printf("Unable to parse the YAML string: %s", $e->getMessage());
+    }
+
+
+
     /*if (!isset($blogPosts[3])) {
         $app->abort(404, "Post 3 does not exist.");
     }*/
@@ -49,6 +69,10 @@ $app->get('/', function (Silex\Application $app, Request $request) use ($blogPos
     return new Response($output, 201);
 });
 
+/**
+ *  /blog/show/{id}
+ *  parameter: id
+ **/
 $app->get('/blog/show/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
     if (!isset($blogPosts[$id])) {
         $app->abort(404, "Post $id does not exist.");
@@ -60,7 +84,10 @@ $app->get('/blog/show/{id}', function (Silex\Application $app, $id) use ($blogPo
         "<p>{$post['body']}</p>";
 });
 
-
+/**
+ *  /feedback
+ *  requeriments: POST
+ **/
 $app->post('/feedback', function (Request $request) {
     $message = $request->get('message');
 
@@ -70,11 +97,18 @@ $app->post('/feedback', function (Request $request) {
     return new Response('Thank you for your feedback!', 201);
 });
 
-//redirect
+/**
+ *  /test
+ * //redirect
+ **/
 $app->get('/test', function () use ($app) {
     return $app->redirect('/');
 });
 
+/**
+ *  /catch error response
+ *
+ **/
 $app->error(function (\Exception $e, $code) {
     switch ($code) {
         case 404:

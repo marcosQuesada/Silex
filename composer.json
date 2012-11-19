@@ -1,6 +1,12 @@
 {
     "require": {
-        "silex/silex": "1.0.*"
+        "php": ">=5.3.3",
+        "silex/silex": "1.0.*",
+        "symfony/yaml": "*",
+        "doctrine/dbal": "2.1.*"
+    },
+    "autoload": {
+        "psr-0": { "Core": "src" }
     },
     "minimum-stability": "dev"
 }
