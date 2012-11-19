@@ -17,5 +17,6 @@ try {
 
 //initiate DBAL service
 $DBAL = new \Core\Services\DBAL($configurator);
+$app['DBAL'] = $DBAL->getConnection();
 
 return $app;
