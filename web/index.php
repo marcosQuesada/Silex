@@ -30,8 +30,9 @@ $app->get('/', function (Silex\Application $app, Request $request) use ($blogPos
 
     $message = $request->get('message');
 
-    var_dump($message);
-
+    foreach ($app['routes']->all() as $key=>$route) {
+        echo "key:".$key."-".$route->getPattern()."<br><br>";
+    }
     $output = '';
     foreach ($blogPosts as $post) {
         $output .= $post['title'];
