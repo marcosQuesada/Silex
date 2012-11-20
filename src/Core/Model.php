@@ -1,14 +1,14 @@
 <?php
 Namespace Core;
-use Silex\Application;
+use Doctrine\DBAL\Connection;
 
 class Model
 {
     protected $connection;
 
-    public function __construct(Application $app)
+    public function __construct(Connection $db)
     {
-        $this->connection =  $app['DBAL'];
+        $this->connection =  $db;
     }
 
     public function getCategory($id)
@@ -23,6 +23,12 @@ class Model
 
     public function getAll($table)
     {
-        return $this->connection->fetchAll('SELECT * FROM '.$table);
+        try
+        {
+            return $this->connection->fetchAll('SELECT * FROM '.$table);
+        }catch(\Exception $e)
+        {
+            throw new \Exception("Posts not found.<br>".$e->getMessage());
+        }
     }
 }

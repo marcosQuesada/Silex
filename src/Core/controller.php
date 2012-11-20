@@ -9,90 +9,45 @@ use Core\Model;
  **/
 $app->get('/', function (Silex\Application $app, Request $request){
 
-  /*  $model = new Model($app);
-    echo "<pre>";
-    var_dump($model->getCategory(1));
-    echo "</pre>";
+     $model = new Model($app['db']);
+     echo "<pre>";
+     var_dump($model->getCategory(1));
+     echo "</pre>";
+     $categories = $model->getAll('categorias');
 
-    $categories = $model->getAll('categorias');
+     /*if (!isset($blogPosts[3])) {
+              $app->abort(404, "Post 3 does not exist.");
+     }*/
 
-    if (!isset($blogPosts[3])) {
-        $app->abort(404, "Post 3 does not exist.");
-    }
+     foreach ($categories as $post) {
+              echo var_export($post);
+              echo '<br />';
+     }
 
-    $output = '';
-    foreach ($categories as $post) {
-        $output .= $post['title_es'];
-        $output .= '<br />';
-    }*/
-
-    $data = $app['db']->fetchAssoc('SELECT * FROM log_cash_spending');
-
-    foreach ($data as $key=>$value) {
-        echo "key:".$key;
-        var_dump($value);
-    }
     $message = $request->get('message');
+    if (isset($message))
+        echo "Message:".$message;
 
-    foreach (getRoutes($app) as $key=>$route) {
-        echo "key:".$key."-".$route->getPattern()."<br><br>";
-    }
-//    return $app->json(array('name' => array(1=>'x', 2=> 'y')));
     return new Response('', 201);
 });
 
-
-////
-// definitions
-$blogPosts = array(
-    1 => array(
-        'date'      => '2011-03-29',
-        'author'    => 'igorw',
-        'title'     => 'Using Silex',
-        'body'      => '...',
-    ),
-    2 => array(
-        'date'      => '2011-03-29',
-        'author'    => 'igorw',
-        'title'     => 'Using Silex 2',
-        'body'      => '...',
-    ),
-);
 /**
- *  /blog/show/{id}
- *  parameter: id
- **/
-$app->get('/blog/show/{id}', function (Silex\Application $app, $id) use ($blogPosts) {
-    if (!isset($blogPosts[$id])) {
+*  /blog/show/{id}
+*  parameter: id
+**/
+$app->get('/blog/show/{id}', function (Silex\Application $app, $id) {
+    $model = new Model($app['db']);
+    echo "<pre>";
+    $data = $model->getCategory($id);
+
+    if (!$data) {
         $app->abort(404, "Post $id does not exist.");
     }
 
-    $post = $blogPosts[$id];
-
-    return  "<h1>{$post['title']}</h1>".
-        "<p>{$post['body']}</p>";
+    return  "<h1>{$data['title_es']}</h1>".
+        "<p>ID:{$id}</p>";
 });
 
-/**
- *  /feedback
- *  requeriments: POST
- **/
-$app->post('/feedback', function (Request $request) {
-    $message = $request->get('message');
-
-    var_dump($message);
-//    mail('feedback@yoursite.com', '[YourSite] Feedback', $message);
-
-    return new Response('Thank you for your feedback!', 201);
-});
-
-/**
- *  /test
- * //redirect
- **/
-$app->get('/test', function () use ($app) {
-    return $app->redirect('/');
-});
 
 /**
  *  /catch error response
@@ -101,17 +56,14 @@ $app->get('/test', function () use ($app) {
 $app->error(function (\Exception $e, $code) {
     switch ($code) {
         case 404:
-            $message = 'OHHH! The requested page could not be found.';
+            $message = $e->getMessage().'OHHH! The requested page could not be found.';
             break;
         default:
             $message = 'We are sorry, but something went terribly wrong.';
+            var_dump($e->getMessage());
     }
 
     return new Response($message, 404, array('X-header-test'=> 'ok'));
 });
 
-function getRoutes($app)
-{
-    return $app['routes']->all();
 
-}
