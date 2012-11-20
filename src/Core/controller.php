@@ -9,22 +9,22 @@ use Core\Model;
  **/
 $app->get('/', function (Silex\Application $app, Request $request){
 
-    $model = new Model($app);
+  /*  $model = new Model($app);
     echo "<pre>";
     var_dump($model->getCategory(1));
     echo "</pre>";
 
     $categories = $model->getAll('categorias');
 
-    /*if (!isset($blogPosts[3])) {
+    if (!isset($blogPosts[3])) {
         $app->abort(404, "Post 3 does not exist.");
-    }*/
+    }
 
     $output = '';
     foreach ($categories as $post) {
         $output .= $post['title_es'];
         $output .= '<br />';
-    }
+    }*/
 
     $message = $request->get('message');
 
@@ -32,7 +32,7 @@ $app->get('/', function (Silex\Application $app, Request $request){
         echo "key:".$key."-".$route->getPattern()."<br><br>";
     }
 //    return $app->json(array('name' => array(1=>'x', 2=> 'y')));
-    return new Response($output, 201);
+    return new Response('', 201);
 });
 
 
