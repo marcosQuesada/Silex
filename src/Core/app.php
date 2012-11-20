@@ -8,16 +8,19 @@ use Core\Services\DBAL;
 $app = new Application();
 
 //Load global configuration
+$app['debug'] = true;
+
+//parse config.yml
 try {
     $configurator = Yaml::Parse( __DIR__ . '/../../app/config.yml');
-    $app['debug'] = true;
-    $app['config'] = $configurator;
+
+    $app['db.options'] = $configurator['database'];
+
+
 } catch (ParseException $e) {
     printf("Unable to parse the YAML string: %s", $e->getMessage());
 }
 
-//initiate DBAL service
-$DBAL = new DBAL($configurator);
-$app['DBAL'] = $DBAL->getConnection();
+$app->register(new Silex\Provider\DoctrineServiceProvider());
 
 return $app;

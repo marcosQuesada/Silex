@@ -26,6 +26,12 @@ $app->get('/', function (Silex\Application $app, Request $request){
         $output .= '<br />';
     }*/
 
+    $data = $app['db']->fetchAssoc('SELECT * FROM log_cash_spending');
+
+    foreach ($data as $key=>$value) {
+        echo "key:".$key;
+        var_dump($value);
+    }
     $message = $request->get('message');
 
     foreach (getRoutes($app) as $key=>$route) {
